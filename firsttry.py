@@ -11,8 +11,9 @@ def outputter(conn):
         while(True):
             text = conn.read_very_eager()
             if text != "":
-                # Stop print from automatically printing a newline
-                print text
+                # Any way to stop print from printing anything
+                # after it prints text?
+                print text,
                 text = ""
             time.sleep(0.1)
     except EOFError:
