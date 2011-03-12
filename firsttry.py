@@ -31,6 +31,6 @@ port = 4242
 session.open(host, port)
 
 
-thread.start_new_thread(outputter, (session,))
+thid = thread.start_new_thread(outputter, (session,))
 
 inputter(session)    
