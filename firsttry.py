@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 def inputter(conn):
     text = ""
     while text != "quit":
