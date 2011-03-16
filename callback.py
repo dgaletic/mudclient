@@ -1,15 +1,39 @@
-telnetlib.COMPRESS = 85
-telnetlib.COMPRESS2 = 86
+COMPRESS = chr(85)
+COMPRESS2 = chr(86)
 
-def callback(tsocket, tcommand, toption):
+import zlib
+
+compressor = None
+
+def tcallback(tsocket, tcommand, toption):
+    print "WE GOT SOMETHIN"
+    print "Command: ", ord(tcommand)
+    print "Option: ", ord(toption)
     if tcommand == telnetlib.WILL:
-        if toption == telnetlib.COMPRESS2:
-            # set the global compression object
+        if toption == COMPRESS2:
+            print "We got a COMPRESS2 request from the server"
             # respond to the server that we accept
+            # TODO: Is this ok? Server doesn't respond to it by
+            # sending IAC SB COMPRESS2 IAC SE
+            session.write(telnetlib.IAC)
+            session.write(telnetlib.DO)
+            session.write(COMPRESS2)
+            session.write("\n")
+
 # the server may begin compression at any time by sending a 
 # IAC SB COMPRESS2 IAC SE sequence, immediately followed by the start # of the compressed stream. 
-            pass
     if tcommand == telnetlib.SB:
-        if toption == telnetlib.COMPRESS2:
-            # read the next thing, if it's IAC SE, we're compressed!
+        if toption == COMPRESS2:
+            # All right, we're compressing! So:
+                # the next thing we receive will be compressed.
+            # set the global compression object
+            print "Server says: Next thing be compressed."
+            compressor = zlib.compressobj()
+            # Actually the next thing will be IAC SE, but 
+            # that is caught by the callback, not the displaying func.
             pass
+    if tcommand == telnetlib.SE:
+            print "IAC SE"
+            # Nothing for now.
+            pass
+
