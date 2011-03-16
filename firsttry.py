@@ -30,6 +30,7 @@ session = telnetlib.Telnet()
 host = "discworld.atuin.net"
 port = 4242
 
+session.set_option_negotiation_callback(tcallback)
 session.open(host, port)
 
 
