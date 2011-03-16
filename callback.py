@@ -2,6 +2,7 @@ COMPRESS = chr(85)
 COMPRESS2 = chr(86)
 
 import zlib
+import telnetlib
 
 compressor = None
 
@@ -15,17 +16,17 @@ def tcallback(tsocket, tcommand, toption):
             # respond to the server that we accept
             # TODO: Is this ok? Server doesn't respond to it by
             # sending IAC SB COMPRESS2 IAC SE
-            session.write(telnetlib.IAC)
-            session.write(telnetlib.DO)
-            session.write(COMPRESS2)
-            session.write("\n")
+            tsocket.send(telnetlib.IAC)
+            tsocket.send(telnetlib.DO)
+            tsocket.send(COMPRESS2)
+            tsocket.send("\n")
 
 # the server may begin compression at any time by sending a 
 # IAC SB COMPRESS2 IAC SE sequence, immediately followed by the start # of the compressed stream. 
     if tcommand == telnetlib.SB:
         if toption == COMPRESS2:
             # All right, we're compressing! So:
-                # the next thing we receive will be compressed.
+            # the next thing we receive will be compressed.
             # set the global compression object
             print "Server says: Next thing be compressed."
             compressor = zlib.compressobj()
